@@ -8,5 +8,17 @@
 </head>
 <body>
     <h1>Very cool frfr :&#41;</h1>
+     <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="fileInput">Choose a file:</label>
+        <input type="file" id="fileInput" name="uploadedFile" accept=".tar.gz">
+        <br>
+        <input type="submit" value="Upload and Process">
+    </form>
+    <div id="statusDiv">
+    </div>
+    <div id="downloadLink" style="display: none;">
+        <p>Processing complete! Download your files:</p>
+        <a href="/download">Download Files</a>
+    </div>
 </body>
 </html>
