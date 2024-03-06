@@ -44,8 +44,6 @@ def process_file(file_path):
     with tarfile.open(file_path, "r:gz") as file:
         file.extractall(UPLOAD_FOLDER)
     
-    # Assuming the CSV and MD files are located directly inside the extracted folder
-    # Adjust the paths as needed based on your actual file structure
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
     with open(os.path.join(UPLOAD_FOLDER, "names.csv")) as f:
@@ -72,7 +70,15 @@ def process_file(file_path):
 
 @app.route('/download')
 def download_file():
-    return send_from_directory(directory=UPLOAD_FOLDER, filename='processed_files.tar.gz', as_attachment=True)
+    try:
+        if os.path.exists(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz')):
+            return send_from_directory(directory=UPLOAD_FOLDER, filename='processed_files.tar.gz', as_attachment=True)
+        else:
+            flash("Processed file not found.")
+            return redirect(url_for('index'))
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
