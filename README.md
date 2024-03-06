@@ -4,6 +4,24 @@
 #### olansk
 ##### olansk
 ###### olansk
+
+
+## Process for generating files:
+1. Install dependencies with pip and/or manually
+2. Run certificate_generator.py
+3. Open the frontend page (http://127.0.0.1:5000 / [railway website])
+4. "Browse..." and choose file to upload
+5. "Upload and Process"
+6. Wait for files to finish processing
+
+## Dependencies
+"pip install pypandoc flask" (or an equivalent command)
+
+(local execution?): Pandoc & TeX / MiKTeX / LaTeX (depending on operating system)
+
+
+
+
 Scripts.com
 Bee Movie
 By Jerry Seinfeld
