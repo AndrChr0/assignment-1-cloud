@@ -12,10 +12,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
 os.makedirs(PDF_FOLDER, exist_ok=True)
 
+
 @app.route('/', methods=['GET'])
 def index():
     # Serve the HTML form from the templates folder
     return render_template('index.html')
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -40,10 +42,11 @@ def upload_file():
         flash('Invalid file type')
         return redirect(request.url)
 
+
 def process_file(file_path):
     with tarfile.open(file_path, "r:gz") as file:
         file.extractall(UPLOAD_FOLDER)
-    
+
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
     with open(os.path.join(UPLOAD_FOLDER, "names.csv")) as f:
@@ -68,6 +71,7 @@ def process_file(file_path):
     with tarfile.open(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz'), "w:gz") as tar:
         tar.add(PDF_FOLDER, arcname=os.path.basename(PDF_FOLDER))
 
+
 @app.route('/download')
 def download_file():
     try:
@@ -79,6 +83,7 @@ def download_file():
     except Exception as e:
         flash(str(e))
         return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
