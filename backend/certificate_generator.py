@@ -13,7 +13,7 @@ os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload_file():
     if 'uploadedFile' not in request.files:
         flash('No file part')
@@ -38,7 +38,7 @@ def upload_file():
 
 def process_file(file_path):
     with tarfile.open(file_path, "r:gz") as file:
-        file.data(UPLOAD_FOLDER)
+        file.extractall(UPLOAD_FOLDER)
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
     with open(os.path.join(UPLOAD_FOLDER, "names.csv")) as f:
