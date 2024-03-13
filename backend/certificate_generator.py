@@ -1,25 +1,19 @@
 from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash
 import tarfile
 import os
-import pypandoc
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 UPLOAD_FOLDER = './uploads'
 PROCESSED_MD_FOLDER = './files/MD'
-PDF_FOLDER = './files/PDF'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
-os.makedirs(PDF_FOLDER, exist_ok=True)
-
 
 @app.route('/', methods=['GET'])
 def index():
-    # Serve the HTML form from the templates folder
     return render_template('index.html')
 
-
-@app.route('/upload', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload_file():
     if 'uploadedFile' not in request.files:
         flash('No file part')
@@ -42,16 +36,13 @@ def upload_file():
         flash('Invalid file type')
         return redirect(request.url)
 
-
 def process_file(file_path):
     with tarfile.open(file_path, "r:gz") as file:
         file.extractall(UPLOAD_FOLDER)
-
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
     with open(os.path.join(UPLOAD_FOLDER, "names.csv")) as f:
         names = f.read()
-
     csv_lines = names.split("\n")
     for line in csv_lines:
         items = [x.strip() for x in line.split(",")]
@@ -61,16 +52,8 @@ def process_file(file_path):
         output_path = os.path.join(PROCESSED_MD_FOLDER, f"{items[0].lower()}_{items[1].lower()}.md")
         with open(output_path, "w") as f:
             f.write(md_output)
-
-    for md_file in os.listdir(PROCESSED_MD_FOLDER):
-        if md_file.endswith('.md'):
-            input_path = os.path.join(PROCESSED_MD_FOLDER, md_file)
-            output_path = os.path.join(PDF_FOLDER, md_file.replace('.md', '.pdf'))
-            pypandoc.convert_file(input_path, 'pdf', outputfile=output_path)
-
     with tarfile.open(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz'), "w:gz") as tar:
-        tar.add(PDF_FOLDER, arcname=os.path.basename(PDF_FOLDER))
-
+        tar.add(PROCESSED_MD_FOLDER, arcname=os.path.basename(PROCESSED_MD_FOLDER))
 
 @app.route('/download')
 def download_file():
@@ -83,7 +66,6 @@ def download_file():
     except Exception as e:
         flash(str(e))
         return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
     app.run(debug=True)
