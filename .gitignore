@@ -4,3 +4,4 @@ uploads
 archive.tar.gz
 names.md
 names.csv
+backend/__pycache__
