@@ -1,4 +1,4 @@
 build:
   install: python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt
 run:
-  start: gunicorn -w 4 -b 0.0.0.0:$PORT backend.certificate_generator:app
+  start: . /opt/venv/bin/activate && gunicorn -w 4 -b :$PORT backend.certificate_generator:app
