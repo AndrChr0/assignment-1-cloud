@@ -9,9 +9,11 @@ PROCESSED_MD_FOLDER = './files/MD'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
 
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 @app.route('/', methods=['POST'])
 def upload_file():
@@ -36,6 +38,7 @@ def upload_file():
         flash('Invalid file type')
         return redirect(request.url)
 
+
 def process_file(file_path):
     with tarfile.open(file_path, "r:gz") as file:
         file.extractall(UPLOAD_FOLDER)
@@ -55,6 +58,7 @@ def process_file(file_path):
     with tarfile.open(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz'), "w:gz") as tar:
         tar.add(PROCESSED_MD_FOLDER, arcname=os.path.basename(PROCESSED_MD_FOLDER))
 
+
 @app.route('/download')
 def download_file():
     try:
@@ -66,6 +70,7 @@ def download_file():
     except Exception as e:
         flash(str(e))
         return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
