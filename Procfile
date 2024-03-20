@@ -1,1 +1,1 @@
-web: gunicorn certificate_generator:app --bind 0.0.0.0:5010
+web: gunicorn certificate_generator:app --bind 0.0.0.0:$PORT
