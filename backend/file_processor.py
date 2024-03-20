@@ -10,7 +10,7 @@ PROCESSED_MD_FOLDER = './files/MD'
 def process_file(file_path):
     # Extract the tarfile
     with tarfile.open(file_path, "r:gz") as file:
-        file.extractall(UPLOAD_FOLDER)
+        file.extractall(UPLOAD_FOLDER, filter="data")
     # Assign the markdown template to a variable
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
