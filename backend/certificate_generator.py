@@ -2,7 +2,7 @@ from flask import Flask, request, send_from_directory, render_template, redirect
 import os
 # import tarfile
 import sys
-from file_processor import process_file
+from backend.file_processor import process_file
 
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
