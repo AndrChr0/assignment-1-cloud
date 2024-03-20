@@ -1,6 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Merriweather Sans", sans-serif;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #8bbed4;
+  background-color: #ebf9ff;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }

@@ -7,27 +7,34 @@
     <title>Cloudes :&#41;</title>
   </head>
   <body>
-    <h1>Very cool frfr :&#41;</h1>
-    <form action="" method="post" enctype="multipart/form-data">
-      <label for="fileInput">Choose a file:</label>
-      <input type="file" id="fileInput" name="uploadedFile" accept=".tar.gz" />
-      <br />
-      <input type="submit" value="Upload and Process" />
-    </form>
-    <div id="statusDiv">
-      {% with messages = get_flashed_messages() %} {% if messages %} {% for
-      message in messages %}
-      <!-- <p>{{ message }}</p> -->
-      {% endfor %}
-      <div id="downloadLink">
-        <p>Processing complete! Download your files:</p>
-        <a
-          href="{{ url_for('download_file') }}"
-          download="processed_files.tar.gz"
-          >Download Files</a
-        >
+    <div class="wrapper">
+      <h1>Very cool frfr :&#41;</h1>
+      <form action="" method="post" enctype="multipart/form-data">
+        <label for="fileInput">Choose a file:</label>
+        <input
+          type="file"
+          id="fileInput"
+          name="uploadedFile"
+          accept=".tar.gz"
+        />
+        <br />
+        <input type="submit" value="Upload and Process" />
+      </form>
+      <div id="statusDiv">
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for
+        message in messages %}
+        <!-- <p>{{ message }}</p> -->
+        {% endfor %}
+        <div id="downloadLink">
+          <p>Processing complete! Download your files:</p>
+          <a
+            href="{{ url_for('download_file') }}"
+            download="processed_files.tar.gz"
+            >Download Files</a
+          >
+        </div>
+        {% endif %} {% endwith %}
       </div>
-      {% endif %} {% endwith %}
     </div>
   </body>
 </html>
