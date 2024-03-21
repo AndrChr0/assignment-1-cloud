@@ -1,6 +1,6 @@
 from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash
 import os
-from backend.file_processor import process_file
+from file_processor import process_file
 
 # Create Flask app
 app = Flask(__name__)
