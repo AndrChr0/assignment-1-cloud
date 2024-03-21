@@ -5,11 +5,19 @@
   font-family: "Merriweather Sans", sans-serif;
 }
 
+#hard-mode-btn {
+  position: absolute;
+  top: 95dvh;
+  left: 70vw;
+  scale: .7;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #ebf9ff;
+  
 }
 
 .wrapper {
@@ -18,4 +26,37 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  max-width: 100vw;
+}
+
+form{
+  width: 200px;
+  border: solid black 2px;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+
+.hard-mode {
+  animation: spin-and-move 1.5s linear infinite;
+}
+
+
+@keyframes spin-and-move {
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  25% {
+    transform: rotate(90deg) translate(50px, 50px);
+  }
+  50% {
+    transform: rotate(180deg) translate(0px, 100px);
+  }
+  75% {
+    transform: rotate(270deg) translate(-50px, 50px);
+  }
+  100% {
+    transform: rotate(360deg) translate(0, 0);
+  }
 }
