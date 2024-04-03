@@ -39,21 +39,23 @@ def upload_file():
         return redirect(request.url)
 
     # Check if the file has a valid extension
-    if file and file.filename.endswith('.tar.gz'):
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(file_path)
-
-        try:
-            # Process the uploaded file
-            process_file(file_path)
-            flash('File successfully uploaded and processed')
-            return redirect(url_for('download_file'))
-        except Exception as e:
-            flash(str(e))
-            return redirect(request.url)
-    else:
+    if not file or not file.filename.endswith('.tar.gz'):
         flash('Invalid file type')
         return redirect(request.url)
+
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(file_path)
+
+    try:
+        # Process the uploaded file
+        process_file(file_path)
+        flash('File successfully uploaded and processed')
+    except Exception as e:
+        flash(str(e))
+        return redirect(request.url)
+
+    # Only redirect to download if the above steps complete without issue
+    return redirect(url_for('download_file'))
 
 
 # Define route for file download
