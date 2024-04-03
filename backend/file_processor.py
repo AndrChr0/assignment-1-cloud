@@ -1,10 +1,13 @@
 # Required imports
 import tarfile
 import os
+import ntpath
 
 # Define variables (change to env vars in the future)
 UPLOAD_FOLDER = './uploads'
 PROCESSED_MD_FOLDER = './files/MD'
+UPLOAD_FOLDER.replace(os.sep, ntpath.sep)
+PROCESSED_MD_FOLDER.replace(os.sep, ntpath.sep)
 
 
 def process_file(file_path):

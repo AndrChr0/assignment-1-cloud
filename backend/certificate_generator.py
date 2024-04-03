@@ -16,10 +16,12 @@ PROCESSED_MD_FOLDER = './files/MD'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
 
+
 # Define route for the home page
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 # Define route for file upload
 @app.route('/', methods=['POST'])
@@ -28,19 +30,19 @@ def upload_file():
     if 'uploadedFile' not in request.files:
         flash('No file part')
         return redirect(request.url)
-    
+
     file = request.files['uploadedFile']
-    
+
     # Check if a file is selected
     if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
-    
+
     # Check if the file has a valid extension
     if file and file.filename.endswith('.tar.gz'):
         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(file_path)
-        
+
         try:
             # Process the uploaded file
             process_file(file_path)
@@ -52,6 +54,7 @@ def upload_file():
     else:
         flash('Invalid file type')
         return redirect(request.url)
+
 
 # Define route for file download
 @app.route('/download')
@@ -66,6 +69,7 @@ def download_file():
     except Exception as e:
         flash(str(e))
         return redirect(url_for('index'))
+
 
 # Run the Flask app
 if __name__ == '__main__':
