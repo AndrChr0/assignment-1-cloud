@@ -1,5 +1,10 @@
-from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash
+from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash, session
 import os
+import sys
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
 from backend.file_processor import process_file
 
 # Create Flask app
@@ -50,8 +55,10 @@ def upload_file():
         # Process the uploaded file
         process_file(file_path)
         flash('File successfully uploaded and processed')
+        session['file_processed'] = True  # Indicate that file has been processed
     except Exception as e:
         flash(str(e))
+        session['file_processed'] = False  # Indicate failure
         return redirect(request.url)
 
     # Only redirect to download if the above steps complete without issue
