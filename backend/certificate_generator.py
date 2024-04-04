@@ -1,9 +1,13 @@
+# Required imports
 from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash, session
 import os
-import sys
+# import shutil
 
+# Required for local execution
+import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
+# end of local requirement
 
 from backend.file_processor import process_file
 
@@ -14,12 +18,21 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
 # Define upload and processed file directories
-UPLOAD_FOLDER = './uploads'
-PROCESSED_MD_FOLDER = './files/MD'
+UPLOAD_FOLDER = 'uploads'
+PROCESSED_MD_FOLDER = 'MD_files'
+
+# Define full filepaths based on OS working directory - more robust code
+FULL_UPLOAD_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER)
+FULL_MD_PATH = os.path.join(os.getcwd(), PROCESSED_MD_FOLDER)
+
+# if os.path.exists(FULL_UPLOAD_PATH):
+#     shutil.rmtree(FULL_UPLOAD_PATH)
+# if os.path.exists(FULL_MD_PATH):
+#     shutil.rmtree(FULL_MD_PATH)
 
 # Create directories if they don't exist
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(PROCESSED_MD_FOLDER, exist_ok=True)
+os.makedirs(FULL_UPLOAD_PATH, exist_ok=True)
+os.makedirs(FULL_MD_PATH, exist_ok=True)
 
 
 # Define route for the home page
@@ -48,7 +61,14 @@ def upload_file():
         flash('Invalid file type')
         return redirect(request.url)
 
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    for filename in os.listdir(FULL_UPLOAD_PATH):
+        if os.path.isfile(os.path.join(FULL_UPLOAD_PATH, filename)):
+            os.remove(os.path.join(FULL_UPLOAD_PATH, filename))
+    for filename in os.listdir(FULL_MD_PATH):
+        if os.path.isfile(os.path.join(FULL_MD_PATH, filename)):
+            os.remove(os.path.join(FULL_MD_PATH, filename))
+
+    file_path = os.path.join(FULL_UPLOAD_PATH, file.filename)
     file.save(file_path)
 
     try:
@@ -61,17 +81,18 @@ def upload_file():
         session['file_processed'] = False  # Indicate failure
         return redirect(request.url)
 
-    # Only redirect to download if the above steps complete without issue
-    return redirect(url_for('download_file'))
+    # Only rerender the page if the above steps complete without issue
+    # This will cause the download button to appear
+    return redirect(url_for('index'))
 
 
 # Define route for file download
 @app.route('/download')
 def download_file():
     try:
-        if os.path.exists(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz')):
+        if os.path.exists(os.path.join(FULL_UPLOAD_PATH, 'processed_files.tar.gz')):
             # Send the processed file as a download
-            return send_from_directory(directory=UPLOAD_FOLDER, filename='processed_files.tar.gz', as_attachment=True)
+            return send_from_directory(directory=FULL_UPLOAD_PATH, path='processed_files.tar.gz', as_attachment=True)
         else:
             flash("Processed file not found.")
             return redirect(url_for('index'))
