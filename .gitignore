@@ -5,3 +5,4 @@ archive.tar.gz
 names.md
 names.csv
 backend/__pycache__
+app.log

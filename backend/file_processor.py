@@ -6,6 +6,7 @@ import os
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_MD_FOLDER = 'MD_files'
 
+# Define full filepaths based on OS working directory - more robust code
 FULL_UPLOAD_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER)
 FULL_MD_PATH = os.path.join(os.getcwd(), PROCESSED_MD_FOLDER)
 
@@ -13,15 +14,15 @@ FULL_MD_PATH = os.path.join(os.getcwd(), PROCESSED_MD_FOLDER)
 def process_file(file_path):
     # Extract the tarfile
     with tarfile.open(file_path, "r:gz") as file:
-        file.extractall(UPLOAD_FOLDER)
+        file.extractall(FULL_UPLOAD_PATH)
         # extractall might require filter="data" to work properly
-        # this might be a python version issue, but extractall without filter is sometimes flagged as deprecated
+        # for unknown reasons, extractall without filter is sometimes flagged as deprecated
         # file.extractall(UPLOAD_FOLDER, filter="data")
     # Assign the markdown template to a variable
-    with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
+    with open(os.path.join(FULL_UPLOAD_PATH, "names.md")) as f:
         template = f.read()
     # Assign the csv file contents to a variable
-    with open(os.path.join(UPLOAD_FOLDER, "names.csv")) as f:
+    with open(os.path.join(FULL_UPLOAD_PATH, "names.csv")) as f:
         names = f.read()
     # Split csv file on newline characters, creating a list of people
     csv_lines = names.split("\n")
@@ -40,5 +41,5 @@ def process_file(file_path):
         with open(output_path, "w") as f:
             f.write(md_output)
     # Once all the new files have been creates, the output file is compressed
-    with tarfile.open(os.path.join(UPLOAD_FOLDER, 'processed_files.tar.gz'), "w:gz") as tar:
+    with tarfile.open(os.path.join(FULL_UPLOAD_PATH, 'processed_files.tar.gz'), "w:gz") as tar:
         tar.add(PROCESSED_MD_FOLDER, arcname=os.path.basename(PROCESSED_MD_FOLDER))

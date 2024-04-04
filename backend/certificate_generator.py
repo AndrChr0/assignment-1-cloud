@@ -1,7 +1,6 @@
 # Required imports
 from flask import Flask, request, send_from_directory, render_template, redirect, url_for, flash, session
 import os
-# import shutil
 
 # Required for local execution
 import sys
@@ -24,11 +23,6 @@ PROCESSED_MD_FOLDER = 'MD_files'
 # Define full filepaths based on OS working directory - more robust code
 FULL_UPLOAD_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER)
 FULL_MD_PATH = os.path.join(os.getcwd(), PROCESSED_MD_FOLDER)
-
-# if os.path.exists(FULL_UPLOAD_PATH):
-#     shutil.rmtree(FULL_UPLOAD_PATH)
-# if os.path.exists(FULL_MD_PATH):
-#     shutil.rmtree(FULL_MD_PATH)
 
 # Create directories if they don't exist
 os.makedirs(FULL_UPLOAD_PATH, exist_ok=True)
@@ -61,6 +55,8 @@ def upload_file():
         flash('Invalid file type')
         return redirect(request.url)
 
+    # Iterates on MD_files and uploads, and removes every file they contain
+    # This clears the relevant processing-folders each time a new file is uploaded
     for filename in os.listdir(FULL_UPLOAD_PATH):
         if os.path.isfile(os.path.join(FULL_UPLOAD_PATH, filename)):
             os.remove(os.path.join(FULL_UPLOAD_PATH, filename))
@@ -68,6 +64,7 @@ def upload_file():
         if os.path.isfile(os.path.join(FULL_MD_PATH, filename)):
             os.remove(os.path.join(FULL_MD_PATH, filename))
 
+    # Saves the uploaded file to the uploads folder
     file_path = os.path.join(FULL_UPLOAD_PATH, file.filename)
     file.save(file_path)
 
@@ -81,7 +78,7 @@ def upload_file():
         session['file_processed'] = False  # Indicate failure
         return redirect(request.url)
 
-    # Only rerender the page if the above steps complete without issue
+    # Rerenders the page if the above steps complete without issue
     # This will cause the download button to appear
     return redirect(url_for('index'))
 
@@ -90,10 +87,12 @@ def upload_file():
 @app.route('/download')
 def download_file():
     try:
+        # If the processed file exists...
         if os.path.exists(os.path.join(FULL_UPLOAD_PATH, 'processed_files.tar.gz')):
-            # Send the processed file as a download
+            # send the processed file as a download
             return send_from_directory(directory=FULL_UPLOAD_PATH, path='processed_files.tar.gz', as_attachment=True)
         else:
+            # If it does not, provide an error message and redirect to index
             flash("Processed file not found.")
             return redirect(url_for('index'))
     except Exception as e:
