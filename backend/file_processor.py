@@ -3,14 +3,20 @@ import tarfile
 import os
 
 # Define variables (change to env vars in the future)
-UPLOAD_FOLDER = './uploads'
-PROCESSED_MD_FOLDER = './files/MD'
+UPLOAD_FOLDER = 'uploads'
+PROCESSED_MD_FOLDER = 'MD_files'
+
+FULL_UPLOAD_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER)
+FULL_MD_PATH = os.path.join(os.getcwd(), PROCESSED_MD_FOLDER)
 
 
 def process_file(file_path):
     # Extract the tarfile
     with tarfile.open(file_path, "r:gz") as file:
-        file.extractall(UPLOAD_FOLDER, filter="data")
+        file.extractall(UPLOAD_FOLDER)
+        # extractall might require filter="data" to work properly
+        # this might be a python version issue, but extractall without filter is sometimes flagged as deprecated
+        # file.extractall(UPLOAD_FOLDER, filter="data")
     # Assign the markdown template to a variable
     with open(os.path.join(UPLOAD_FOLDER, "names.md")) as f:
         template = f.read()
