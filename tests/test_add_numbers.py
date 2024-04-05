@@ -1,5 +1,6 @@
 import unittest
-from add_numbers.add_numbers import add_two_numbers
+from src.add_numbers.add_numbers import add_two_numbers
+
 
 class TestAddNumbers(unittest.TestCase):
     def test_add_positive_numbers(self):
@@ -16,7 +17,7 @@ class TestAddNumbers(unittest.TestCase):
 
     def test_add_positive_and_negative_numbers(self):
         self.assertEqual(add_two_numbers(2, -3), -1)
-    
+
     def test_add_negative_and_positive_numbers(self):
         self.assertEqual(add_two_numbers(-2, 3), 1)
 

@@ -28,3 +28,4 @@
 ## Flake8 Configuration
 
 - Max line length: 140
+- Ignore: E402
